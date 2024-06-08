@@ -32,6 +32,7 @@ public class InventoryManager : MonoBehaviour
     {
         inventoryPanel.SetActive(false);
         _isInventoryOpen = false;
+        LoadInventory();
     }
     
     private void Update()
@@ -76,5 +77,31 @@ public class InventoryManager : MonoBehaviour
         // 名前ではなく、インデックスを使って削除する！
         // インデックスはItemスクリプトのOnUseItemButtonClickedメソッドで取得している！
         _items.RemoveAt(index);
+    }
+    
+    private void OnDestroy()
+    {
+        SaveInventory();
+    }
+    
+    private void SaveInventory()
+    {
+        string itemsString = string.Join(",", _items);
+        PlayerPrefs.SetString("Inventory", itemsString);
+    }
+    
+    private void LoadInventory()
+    {
+        string itemsString = PlayerPrefs.GetString("Inventory");
+        if (itemsString == "") return;
+        
+        // 保存されたアイテムをカンマで区切ってリストに追加する！
+        // このとき、_itemsに直接代入すると、参照が同じになってしまうので、
+        // 一度新しいリストに追加してからAddItemメソッドを使って追加する！
+        var tempItems = new List<string>(itemsString.Split(','));
+        foreach (var item in tempItems)
+        {
+            AddItem(item);
+        }
     }
 }
