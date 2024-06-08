@@ -69,4 +69,12 @@ public class InventoryManager : MonoBehaviour
                 break;
         }
     }
+    
+    public void RemoveItem(int index)
+    {
+        // 同名のアイテムは他にもあるので、正しいアイテムが削除されるようにするために、
+        // 名前ではなく、インデックスを使って削除する！
+        // インデックスはItemスクリプトのOnUseItemButtonClickedメソッドで取得している！
+        _items.RemoveAt(index);
+    }
 }
